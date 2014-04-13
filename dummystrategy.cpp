@@ -1,27 +1,24 @@
 #include "dummystrategy.h"
-
 #include "field.h"
 
 #include <algorithm>
 
 int DummyStrategy::MakeDecision(Field const& field) {
-    Point res = CheckColumns(field);
-    if(!res.is_empty) {
-        return res.x;
+    int res = TryFindDangerInColumns(field);
+    return res >= 0 ? res : DefauldDecision(field);
+}
+
+int DummyStrategy::TryFindDangerInColumns(Field const& field) {
+    for(int i = 0; i != Field::WIDTH; ++i) {
+        for(int j = 0; j != Field::HEIGHT - DANGER_SEQ_LENGTH + 1; ++j) {
+            function<bool(Mark)> pred = [](char sym){ return sym == WHITE_MARK; };
+            if(field.ColumnAllOf(i, j, j + DANGER_SEQ_LENGTH, pred) &&
+               CheckDangerColumnPos(field, i, j + DANGER_SEQ_LENGTH)) {
+                return i;
+            }
+        }
     }
-    return DefauldDecision(field);
-}
-
-DummyStrategy::Point DummyStrategy::CheckLines(Field const& field) {
-    Vector2d matrix = field.GetState();
-    return CheckMatrixLines(matrix);
-}
-
-DummyStrategy::Point DummyStrategy::CheckColumns(Field const& field) {
-    Vector2d matrix = field.GetState();
-    Vector2d transposed = TramsposeMatrix(matrix);
-    Point res = CheckMatrixLines(transposed);
-    return res.is_empty ? res : Point(res.y, res.x);
+    return -1;
 }
 
 int DummyStrategy::DefauldDecision(Field const& field) {
@@ -39,37 +36,6 @@ int DummyStrategy::DefauldDecision(Field const& field) {
     return current_column_;
 }
 
-DummyStrategy::Point DummyStrategy::CheckMatrixLines(Vector2d& matrix) {
-    for(size_t i = 0; i != matrix.size(); ++i) {
-        for(size_t j = 0; j != matrix[i].size() - DANGER_SEQ_LENGTH + 1; ++j) {
-            auto pred = [](char sym){ return sym == WHITE_MARK; };
-            if(std::all_of(matrix[i].begin() + j, matrix[i].begin() + j + DANGER_SEQ_LENGTH, pred)) {
-                Point res = CheckDangerLine(matrix, Point(j, i), Point(j + DANGER_SEQ_LENGTH - 1, i));
-                if(!res.is_empty) {
-                    return res;
-                }
-            }
-        }
-    }
-    return Point::Empty();
-}
-
-DummyStrategy::Point DummyStrategy::CheckDangerLine(Vector2d& matrix, Point beg, Point end) {
-    if(beg.x != 0 && matrix[beg.y][beg.x - 1] == EMPTY_MARK) {
-        return Point(beg.x - 1, beg.y);
-    }
-    if(end.x != matrix[0].size() && matrix[end.y][end.x + 1] == EMPTY_MARK) {
-        return Point(end.x + 1, end.y);
-    }
-    return Point::Empty();
-}
-
-Vector2d DummyStrategy::TramsposeMatrix(Vector2d const& matrix) {
-    Vector2d transposed(matrix[0].size(), Vector(matrix.size()));
-    for (size_t i = 0; i < matrix[0].size(); i++) {
-       for (size_t j = 0; j < matrix.size(); j++) {
-           transposed[i][j] = matrix[j][i];
-       }
-    }
-    return transposed;
+bool DummyStrategy::CheckDangerColumnPos(Field const& field, int column, int line) {
+    return line != field.HEIGHT && field.At(line, column) == EMPTY_MARK;
 }

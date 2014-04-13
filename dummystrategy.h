@@ -14,19 +14,9 @@ private:
     const int DANGER_SEQ_LENGTH = 3;
     int step_ = -3;
 
-    struct Point {
-        size_t x, y;
-        bool is_empty;
-        Point(size_t xx, size_t yy, bool is_emp = false) : x(xx), y(yy), is_empty(is_emp) {}
-        static Point Empty() { return Point(0, 0, true); }
-    };
-
-    Point CheckLines(Field const& field);
-    Point CheckColumns(Field const& field);
+    int TryFindDangerInColumns(Field const& field);
     int DefauldDecision(Field const& field);
-    Point CheckMatrixLines(Vector2d& matrix);
-    Point CheckDangerLine(Vector2d& matrix, Point beg, Point end);
-    Vector2d TramsposeMatrix(Vector2d const& matrix);
+    bool CheckDangerColumnPos(Field const& field, int column, int line);
 };
 
 #endif // DUMMYSTRATEGY_H
