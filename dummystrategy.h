@@ -15,8 +15,13 @@ private:
     int step_ = -3;
 
     int TryFindDangerInColumns(Field const& field);
-    int DefauldDecision(Field const& field);
+    int TryFindDangerInLines(Field const& field);
     bool CheckDangerColumnPos(Field const& field, int column, int line);
+    bool CheckLineLeft3(int col, Field const& field);
+    bool CheckLineRight3(int col, Field const& field);
+    bool CheckLineLeft2(int col, Field const& field);
+    bool CheckLineRight2(int col, Field const& field);
+    int DefauldDecision(Field const& field);
 };
 
 #endif // DUMMYSTRATEGY_H

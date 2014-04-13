@@ -4,8 +4,6 @@
 #include <array>
 #include <functional>
 
-#include "point.h"
-
 using std::array;
 using std::function;
 
