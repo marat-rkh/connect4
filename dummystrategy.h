@@ -3,7 +3,6 @@
 
 #include "field.h"
 #include "strategy.h"
-#include <cstdlib>
 
 class DummyStrategy : public Strategy {
 public:

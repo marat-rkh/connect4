@@ -15,7 +15,7 @@ int DummyStrategy::MakeDecision(Field const& field) {
 int DummyStrategy::TryFindDangerInColumns(Field const& field) {
     for(int i = 0; i != Field::WIDTH; ++i) {
         for(int j = 0; j != Field::HEIGHT - DANGER_SEQ_LENGTH + 1; ++j) {
-            function<bool(Mark)> pred = [](char sym){ return sym == WHITE_MARK; };
+            function<bool(Mark)> pred = [](Mark sym){ return sym == WHITE_MARK; };
             if(field.ColumnAllOf(i, j, j + DANGER_SEQ_LENGTH, pred) &&
                CheckDangerColumnPos(field, i, j + DANGER_SEQ_LENGTH)) {
                 return i;
@@ -42,26 +42,26 @@ bool DummyStrategy::CheckDangerColumnPos(Field const& field, int column, int lin
 }
 
 bool DummyStrategy::CheckLineLeft3(int col, Field const& field) {
-    function<bool(Mark)> pred = [](char sym){ return sym == WHITE_MARK; };
+    function<bool(Mark)> pred = [](Mark sym){ return sym == WHITE_MARK; };
     return (col - DANGER_SEQ_LENGTH >= 0) &&
            (field.LineAllOf(field.Top(col), col - DANGER_SEQ_LENGTH, col, pred));
 }
 
 bool DummyStrategy::CheckLineRight3(int col, Field const& field) {
-    function<bool(Mark)> pred = [](char sym){ return sym == WHITE_MARK; };
+    function<bool(Mark)> pred = [](Mark sym){ return sym == WHITE_MARK; };
     return (col + DANGER_SEQ_LENGTH + 1 < Field::WIDTH) &&
            (field.LineAllOf(field.Top(col), col + 1, col + DANGER_SEQ_LENGTH + 1, pred));
 }
 
 bool DummyStrategy::CheckLineLeft2(int col, Field const& field) {
-    function<bool(Mark)> pred = [](char sym){ return sym == WHITE_MARK; };
+    function<bool(Mark)> pred = [](Mark sym){ return sym == WHITE_MARK; };
     return (col - DANGER_SEQ_LENGTH >= 0) &&
            (field.LineAllOf(field.Top(col), col - DANGER_SEQ_LENGTH - 1, col, pred)) &&
            (field.At(field.Top(col), col - DANGER_SEQ_LENGTH) == EMPTY_MARK);
 }
 
 bool DummyStrategy::CheckLineRight2(int col, Field const& field) {
-    function<bool(Mark)> pred = [](char sym){ return sym == WHITE_MARK; };
+    function<bool(Mark)> pred = [](Mark sym){ return sym == WHITE_MARK; };
     return (col + DANGER_SEQ_LENGTH + 1 < Field::WIDTH) &&
            (field.LineAllOf(field.Top(col), col + 1, col + DANGER_SEQ_LENGTH, pred)) &&
            (field.At(field.Top(col), col + DANGER_SEQ_LENGTH + 1) == EMPTY_MARK);

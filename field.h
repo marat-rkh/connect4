@@ -15,7 +15,7 @@ public:
 
     Mark At(int l, int c) const { return field_[l][c]; }
     Mark Top(int i) const {
-        int line = tops_[i] == 0 ? 0 : tops_[i] - 1;
+        int line = (tops_[i] == 0) ? 0 : (tops_[i] - 1);
         return At(line, i);
     }
     int ColumnEmptyPart(int i) const { return HEIGHT - tops_[i]; }
@@ -28,6 +28,7 @@ public:
     static const int WIDTH = 7;
 private:
     bool MakeMove(int pos, Mark mark);
+    bool AllOf(int lstart, int cstart, int lend, int cend, int step, function<bool(Mark)> const& pred) const;
 
     array<array<Mark, WIDTH>, HEIGHT> field_;
     array<int, WIDTH> tops_;
